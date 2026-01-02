@@ -40,6 +40,11 @@ const userSchema = new mongoose.Schema({
     min: [20, 'Goal weight must be at least 20kg'],
     max: [500, 'Goal weight must be valid']
   },
+  primaryGoal: {
+    type: String,
+    enum: ['Lose Weight', 'Gain Muscle', 'Maintain Weight'],
+    default: 'Maintain Weight'
+  },
   dietType: {
     type: [String],
     default: []

@@ -1,85 +1,50 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
-import EditProfileModal from '../components/EditProfileModal';
-import EditWeightGoalModal from '../components/EditWeightGoalModal';
-import EditPreferencesModal from '../components/EditPreferencesModal';
-import EditMealModal from '../components/EditMealModal';
-import LogMealModal from '../components/LogMealModal';
-import LogWaterModal from '../components/LogWaterModal';
-import LogWorkoutModal from '../components/LogWorkoutModal';
+import EditProfileModal from './EditProfileModal';
+import EditWeightGoalModal from './EditWeightGoalModal';
+import EditPreferencesModal from './EditPreferencesModal';
+import EditMealModal from './EditMealModal';
+import LogMealModal from './LogMealModal';
+import LogWaterModal from './LogWaterModal';
+import LogWorkoutModal from './LogWorkoutModal';
 
-export default function UserProfile() {
-  const [user, setUser] = useState(null);
+const API_URL = 'http://localhost:5000/api';
+
+export default function DashboardTab({ user, handleProfileUpdate, handleLogout }) {
   const [meals, setMeals] = useState([]);
-  const [waterLogs, setWaterLogs] = useState([]);
+  const [workouts, setWorkouts] = useState([]);
   const [todayWaterTotal, setTodayWaterTotal] = useState(0);
   const [todayWaterCount, setTodayWaterCount] = useState(0);
-  const [workouts, setWorkouts] = useState([]);
-  const [todayWorkoutStats, setTodayWorkoutStats] = useState({ totalDuration: 0, totalCalories: 0, count: 0 });
-  const [loading, setLoading] = useState(true);
+  const [todayWorkoutStats, setTodayWorkoutStats] = useState({ count: 0, totalDuration: 0, totalCalories: 0 });
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showWeightGoalModal, setShowWeightGoalModal] = useState(false);
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
   const [showMealModal, setShowMealModal] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState(null);
   const [showLogMealModal, setShowLogMealModal] = useState(false);
   const [showLogWaterModal, setShowLogWaterModal] = useState(false);
   const [showLogWorkoutModal, setShowLogWorkoutModal] = useState(false);
-  const [selectedMeal, setSelectedMeal] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserProfile();
     fetchMeals();
     fetchWaterLogs();
     fetchWorkouts();
   }, []);
 
-  const fetchUserProfile = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      const response = await axios.get('http://localhost:5000/api/user/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      setUser(response.data.user);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
-      }
-      setLoading(false);
-    }
-  };
-
   const fetchMeals = async () => {
     try {
       const token = localStorage.getItem('token');
+      // Get today's date in YYYY-MM-DD format (local timezone)
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
       
-      if (!token) {
-        return;
-      }
-
-      // Get today's meals
-      const today = new Date().toISOString().split('T')[0];
-      const response = await axios.get(`http://localhost:5000/api/meals?date=${today}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      console.log('Dashboard fetching meals for date:', dateStr);
+      const response = await axios.get(`${API_URL}/meals?date=${dateStr}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       setMeals(response.data.meals || []);
     } catch (error) {
       console.error('Error fetching meals:', error);
@@ -89,25 +54,9 @@ export default function UserProfile() {
   const fetchWaterLogs = async () => {
     try {
       const token = localStorage.getItem('token');
-      
-      if (!token) {
-        return;
-      }
-
-      // Get today's water logs
-      const today = new Date().toISOString().split('T')[0];
-      const response = await axios.get(`http://localhost:5000/api/water?startDate=${today}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await axios.get(`${API_URL}/water`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      console.log('Water API Response:', response.data);
-      console.log('Today Water Total:', response.data.todayTotal);
-      console.log('Water Logs Count:', response.data.waterLogs.length);
-      console.log('Today Water Count:', response.data.todayCount);
-
-      setWaterLogs(response.data.waterLogs || []);
       setTodayWaterTotal(response.data.todayTotal || 0);
       setTodayWaterCount(response.data.todayCount || 0);
     } catch (error) {
@@ -118,21 +67,11 @@ export default function UserProfile() {
   const fetchWorkouts = async () => {
     try {
       const token = localStorage.getItem('token');
-      
-      if (!token) {
-        return;
-      }
-
-      // Get today's workouts
-      const today = new Date().toISOString().split('T')[0];
-      const response = await axios.get(`http://localhost:5000/api/workouts?startDate=${today}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await axios.get(`${API_URL}/workouts`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       setWorkouts(response.data.workouts || []);
-      setTodayWorkoutStats(response.data.todayStats || { totalDuration: 0, totalCalories: 0, count: 0 });
+      setTodayWorkoutStats(response.data.todayStats || { count: 0, totalDuration: 0, totalCalories: 0 });
     } catch (error) {
       console.error('Error fetching workouts:', error);
     }
@@ -143,100 +82,32 @@ export default function UserProfile() {
     setShowMealModal(true);
   };
 
-  const handleMealUpdate = (updatedMeal, isDeleted = false) => {
-    if (isDeleted) {
-      setMeals(meals.filter(m => m._id !== selectedMeal._id));
-    } else {
-      setMeals(meals.map(m => m._id === updatedMeal._id ? updatedMeal : m));
-    }
-    fetchUserProfile(); // Refresh to update calories
+  const handleMealUpdate = () => {
+    fetchMeals();
+    setShowMealModal(false);
   };
 
-  const handleProfileUpdate = (updatedUser) => {
-    setUser(updatedUser);
-  };
+  // Calculate today's nutrition totals (all meals are already filtered by today's date from backend)
+  const todaysTotals = meals.reduce((totals, meal) => {
+    totals.calories += meal.calories || 0;
+    totals.protein += meal.protein || 0;
+    totals.carbs += meal.carbs || 0;
+    totals.fat += meal.fat || 0;
+    return totals;
+  }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/');
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background-light">
-        <div className="text-primary text-2xl font-bold">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null;
-  }
-
-  const dailyCalorieGoal = user.dailyCalorieGoal || 2000;
-  
-  // Calculate today's totals from actual meals
-  const todaysTotals = meals.reduce((acc, meal) => ({
-    calories: acc.calories + (meal.calories || 0),
-    protein: acc.protein + (meal.protein || 0),
-    carbs: acc.carbs + (meal.carbs || 0),
-    fat: acc.fat + (meal.fat || 0)
-  }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
-
+  const dailyCalorieGoal = user.calorieGoal || 2000;
   const currentCalories = todaysTotals.calories;
   const caloriesLeft = dailyCalorieGoal - currentCalories;
   const caloriesPercent = Math.min((currentCalories / dailyCalorieGoal) * 100, 100);
 
-  // Nutritional targets (can be customized based on user goals)
+  // Nutritional targets
   const proteinTarget = 140;
   const carbsTarget = 220;
   const fatTarget = 65;
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-background-light">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-border-light">
-        <div className="layout-container flex justify-center w-full">
-          <div className="px-4 md:px-10 py-3 flex items-center justify-between w-full max-w-7xl">
-            <Link to="/" className="flex items-center gap-2 text-text-main cursor-pointer hover:opacity-80 transition-opacity">
-              <div className="size-8 flex items-center justify-center text-primary">
-                <span className="material-symbols-outlined text-3xl">nutrition</span>
-              </div>
-              <h2 className="text-xl font-bold leading-tight tracking-tight">NutriTrack</h2>
-            </Link>
-            <nav className="hidden md:flex items-center gap-8">
-              <Link to="/dashboard" className="text-text-main font-bold border-b-2 border-primary pb-0.5 transition-colors">Dashboard</Link>
-              <Link to="/food-diary" className="text-text-muted text-sm font-medium hover:text-primary transition-colors">Food Diary</Link>
-              <a className="text-text-muted text-sm font-medium hover:text-primary transition-colors" href="#">Reports</a>
-              <a className="text-text-muted text-sm font-medium hover:text-primary transition-colors" href="#">Community</a>
-            </nav>
-            <div className="flex items-center gap-4">
-              <button className="relative text-text-muted hover:text-primary transition-colors">
-                <span className="material-symbols-outlined">notifications</span>
-                <span className="absolute top-0 right-0 size-2 bg-red-500 rounded-full border-2 border-white"></span>
-              </button>
-              <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-                <span className="hidden sm:block text-sm font-bold text-text-main text-right">
-                  {user.fullName}<br/>
-                  <span className="text-xs font-normal text-text-muted">{user.membershipType} Member</span>
-                </span>
-                <button 
-                  onClick={handleLogout}
-                  className="size-10 rounded-full overflow-hidden border-2 border-primary/20 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  <img 
-                    alt="User Profile" 
-                    className="w-full h-full object-cover" 
-                    src={user.profileImage}
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <>
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center w-full pb-16">
         {/* Hero Banner */}
@@ -658,6 +529,6 @@ export default function UserProfile() {
         onClose={() => setShowLogWorkoutModal(false)}
         onSuccess={fetchWorkouts}
       />
-    </div>
+    </>
   );
 }

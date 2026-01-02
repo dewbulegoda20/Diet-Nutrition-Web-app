@@ -58,7 +58,7 @@ const Signup = () => {
       if (response.data.success) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        navigate('/dashboard');
+        navigate('/onboarding');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed. Please try again.');

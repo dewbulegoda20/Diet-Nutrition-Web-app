@@ -9,22 +9,22 @@ export default {
     extend: {
       colors: {
         "primary": "#13ec80",
+        "primary-dark": "#0ea574",
         "background-light": "#f6f8f7",
-        "background-dark": "#102219",
+        "background-dark": "#111827",
         "text-main": "#111814",
         "text-muted": "#618975",
+        "card-light": "#ffffff",
+        "border-light": "#e5e7eb",
       },
       fontFamily: {
         "display": ["Manrope", "sans-serif"],
         "sans": ["Manrope", "sans-serif"]
       },
-      borderRadius: {
-        "DEFAULT": "0.375rem", 
-        "lg": "0.5rem",
-        "xl": "0.75rem",
-        "2xl": "1rem",
-        "full": "9999px"
-      },
+      boxShadow: {
+        'soft': '0 2px 4px rgba(0, 0, 0, 0.05)',
+        'glow': '0 4px 12px rgba(19, 236, 128, 0.2)',
+      }
     },
   },
   plugins: [],

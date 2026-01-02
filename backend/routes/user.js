@@ -41,7 +41,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
 // PUT /api/user/profile - Update user profile
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
-    const { fullName, age, height, weight, goalWeight, dietType, allergies, dailyCalorieGoal, profileImage } = req.body;
+    const { fullName, age, height, weight, goalWeight, primaryGoal, dietType, allergies, dailyCalorieGoal, profileImage } = req.body;
 
     const updateData = {};
     if (fullName !== undefined) updateData.fullName = fullName;
@@ -49,6 +49,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
     if (height !== undefined) updateData.height = height;
     if (weight !== undefined) updateData.weight = weight;
     if (goalWeight !== undefined) updateData.goalWeight = goalWeight;
+    if (primaryGoal !== undefined) updateData.primaryGoal = primaryGoal;
     if (dietType !== undefined) updateData.dietType = dietType;
     if (allergies !== undefined) updateData.allergies = allergies;
     if (dailyCalorieGoal !== undefined) updateData.dailyCalorieGoal = dailyCalorieGoal;

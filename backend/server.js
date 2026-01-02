@@ -4,6 +4,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
+import mealRoutes from './routes/meals.js';
+import waterRoutes from './routes/water.js';
+import workoutRoutes from './routes/workouts.js';
 
 dotenv.config();
 
@@ -25,6 +28,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/meals', mealRoutes);
+app.use('/api/water', waterRoutes);
+app.use('/api/workouts', workoutRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to NutriTrack API' });
