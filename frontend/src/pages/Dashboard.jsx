@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DashboardTab from '../components/DashboardTab';
 import FoodDiaryTab from '../components/FoodDiaryTab';
+import ReportsTab from '../components/ReportsTab';
+import CommunityTab from '../components/CommunityTab';
 import Navbar from '../components/Navbar';
 
 const Dashboard = () => {
@@ -81,6 +83,8 @@ const Dashboard = () => {
         />
       )}
       {activeTab === 'food-diary' && <FoodDiaryTab />}
+      {activeTab === 'reports' && <ReportsTab />}
+      {activeTab === 'community' && <CommunityTab />}
     </div>
   );
 };

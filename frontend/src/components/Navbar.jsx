@@ -35,18 +35,26 @@ const Navbar = ({ activeTab, setActiveTab, user, handleLogout }) => {
             >
               Food Diary
             </button>
-            <a
-              href="#"
-              className="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'reports'
+                  ? 'text-primary font-semibold border-b-2 border-primary'
+                  : 'text-gray-500 hover:text-primary'
+              }`}
             >
               Reports
-            </a>
-            <a
-              href="#"
-              className="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
+            </button>
+            <button
+              onClick={() => setActiveTab('community')}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'community'
+                  ? 'text-primary font-semibold border-b-2 border-primary'
+                  : 'text-gray-500 hover:text-primary'
+              }`}
             >
               Community
-            </a>
+            </button>
           </div>
 
           <div className="flex items-center space-x-4">

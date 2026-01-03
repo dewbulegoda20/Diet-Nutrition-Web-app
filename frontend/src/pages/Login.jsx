@@ -56,12 +56,18 @@ const Login = () => {
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 lg:p-24 bg-white dark:bg-background-dark relative overflow-y-auto">
         <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="flex flex-col gap-2">
-            <Link to="/" className="flex items-center gap-2 w-fit mb-6 group">
-              <div className="size-10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
-                <span className="material-symbols-outlined text-4xl">nutrition</span>
-              </div>
-              <span className="text-2xl font-bold text-text-main dark:text-white tracking-tight">NutriTrack</span>
-            </Link>
+            <div className="flex items-center justify-between mb-6">
+              <Link to="/" className="flex items-center gap-2 group">
+                <div className="size-10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+                  <span className="material-symbols-outlined text-4xl">nutrition</span>
+                </div>
+                <span className="text-2xl font-bold text-text-main dark:text-white tracking-tight">NutriTrack</span>
+              </Link>
+              <Link to="/" className="text-sm font-medium text-text-muted hover:text-primary transition-colors flex items-center gap-1">
+                <span className="material-symbols-outlined text-lg">home</span>
+                <span>Home</span>
+              </Link>
+            </div>
             <h1 className="text-3xl md:text-4xl font-black text-text-main dark:text-white tracking-tight">Welcome back</h1>
             <p className="text-text-muted dark:text-gray-400 text-lg">Please enter your details to access your dashboard.</p>
           </div>

@@ -7,6 +7,7 @@ import userRoutes from './routes/user.js';
 import mealRoutes from './routes/meals.js';
 import waterRoutes from './routes/water.js';
 import workoutRoutes from './routes/workouts.js';
+import reportsRoutes from './routes/reports.js';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/water', waterRoutes);
 app.use('/api/workouts', workoutRoutes);
+app.use('/api/reports', reportsRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to NutriTrack API' });
