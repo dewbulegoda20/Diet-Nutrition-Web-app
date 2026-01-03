@@ -14,8 +14,8 @@ const Header = () => {
           
           <nav className="hidden md:flex items-center gap-8">
             <a className="text-text-main dark:text-gray-200 text-sm font-medium hover:text-primary transition-colors" href="#">Features</a>
-            <a className="text-text-main dark:text-gray-200 text-sm font-medium hover:text-primary transition-colors" href="#">Pricing</a>
-            <a className="text-text-main dark:text-gray-200 text-sm font-medium hover:text-primary transition-colors" href="#">Blog</a>
+            <Link to="/pricing" className="text-text-main dark:text-gray-200 text-sm font-medium hover:text-primary transition-colors">Pricing</Link>
+            <Link to="/blog" className="text-text-main dark:text-gray-200 text-sm font-medium hover:text-primary transition-colors">Blog</Link>
           </nav>
           
           <div className="flex items-center gap-3">
